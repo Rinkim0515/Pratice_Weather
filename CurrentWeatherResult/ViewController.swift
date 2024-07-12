@@ -63,8 +63,10 @@ class ViewController: UIViewController {
         tv.backgroundColor = .black
         tv.delegate = self
         tv.dataSource = self
+        tv.register(TableViewCell.self, forCellReuseIdentifier: TableViewCell.id)
         return tv
     }()
+    private var dataSource = [ForecastWeather]()
 
     
     
@@ -73,6 +75,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         configureUI()
         fetchCurrentWeatherData()
+        fetchForecastData()
     }
     
     private func fetchData<T: Decodable>(url: URL, completion: @escaping (T?) -> Void){
@@ -134,13 +137,40 @@ class ViewController: UIViewController {
         }
         
     }
+    
+    private func fetchForecastData(){
+        var urlComponents = URLComponents(string: "https://api.openweathermap.org/data/2.5/forecast?")
+        urlComponents?.queryItems = self.urlQueryItem
+        
+        
+        guard let url = urlComponents?.url else{
+            print("잘못된 URL")
+            return
+        }
+        
+        fetchData(url: url){ [weak self] (result: ForecastWeatherResult?) in
+            guard let self, let result else { return }
+            
+            for forecastWeather in result.list{
+                print("\(forecastWeather.main)  \(forecastWeather.dtTxt) \n\n")
+            }
+            
+            DispatchQueue.main.async{
+                self.dataSource = result.list
+                self.tableView.reloadData()
+            }
+        }
+        
+        
+    }
     private func configureUI(){
         view.backgroundColor = .black
         [
             titleLabel,
             tempLabel,
             tempStackView,
-            imageView
+            imageView,
+            tableView
         ].forEach{ view.addSubview($0) }
         
         [
@@ -165,6 +195,11 @@ class ViewController: UIViewController {
             $0.width.height.equalTo(160)
             $0.top.equalTo(tempStackView.snp.bottom).offset(20)
         }
+        tableView.snp.makeConstraints{
+            $0.top.equalTo(imageView.snp.bottom).offset(30)
+            $0.leading.trailing.equalToSuperview().inset(20)
+            $0.bottom.equalToSuperview().inset(50)
+        }
         
     }
 
@@ -174,15 +209,18 @@ class ViewController: UIViewController {
 extension ViewController: UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        <#code#>
+        40
     }
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        <#code#>
+        dataSource.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        <#code#>
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: TableViewCell.id) as? TableViewCell else { return UITableViewCell() }
+        cell.configureCell(forecastWeather: dataSource[indexPath.row])
+        return cell
+        
     }
 }

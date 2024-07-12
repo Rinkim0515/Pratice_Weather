@@ -28,6 +28,7 @@ final class TableViewCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        configureUI()
     }
     
     required init?(coder: NSCoder) {
@@ -51,7 +52,9 @@ final class TableViewCell: UITableViewCell {
         }
     }
     
-    public func configureCell(){
+    public func configureCell(forecastWeather: ForecastWeather) {
+        dtTxtLabel.text = "\(forecastWeather.dtTxt)"
+        tempLabel.text = "\(forecastWeather.main.temp)C"
         
     }
     
