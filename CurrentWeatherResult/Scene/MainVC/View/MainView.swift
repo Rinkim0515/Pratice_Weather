@@ -30,7 +30,7 @@ class MainView: UIView {
         let lb = UILabel()
         lb.textColor = .white
         lb.font = .boldSystemFont(ofSize: 20)
-        lb.text = "20도"
+        lb.text = "222도"
         return lb
     }()
     
