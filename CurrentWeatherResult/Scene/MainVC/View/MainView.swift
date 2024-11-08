@@ -9,6 +9,14 @@ import UIKit
 import SnapKit
 
 class MainView: UIView {
+    let locationButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        let image = UIImage(systemName: "location.app.fill")?.resizeImageTo(size: CGSize(width: 40, height: 40))
+        button.setImage(image, for: .normal)
+        button.tintColor = .white
+        return button
+    }()
     
      let titleLabel = {
         let lb = UILabel()
@@ -74,9 +82,11 @@ class MainView: UIView {
     }
     
     
-    private func configureUI(){
+    private func configureUI() {
+        
         self.backgroundColor = .black
         [
+            locationButton,
             titleLabel,
             tempLabel,
             tempStackView,
@@ -88,6 +98,11 @@ class MainView: UIView {
             tempMaxLabel,
             tempMinLabel
         ].forEach{ tempStackView.addArrangedSubview($0) }
+        
+        locationButton.snp.makeConstraints {
+            $0.trailing.equalTo(titleLabel.snp.leading).offset(-20)
+            $0.centerY.equalTo(titleLabel.snp.centerY)
+        }
         
         titleLabel.snp.makeConstraints{
             $0.centerX.equalToSuperview()

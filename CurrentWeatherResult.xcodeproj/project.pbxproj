@@ -15,6 +15,7 @@
 		9FFF74C82CCF1EED00FD6497 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 9FFF74C72CCF1EED00FD6497 /* RxCocoa */; };
 		9FFF74CA2CCF1EED00FD6497 /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = 9FFF74C92CCF1EED00FD6497 /* RxRelay */; };
 		9FFF74CC2CCF1EED00FD6497 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 9FFF74CB2CCF1EED00FD6497 /* RxSwift */; };
+		9FFF755E2CDD985E00FD6497 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 9FFF755D2CDD985E00FD6497 /* Kingfisher */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,8 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		9FFF74B72CCE844500FD6497 /* Scene */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Scene; sourceTree = "<group>"; };
 		9FFF74C12CCE855A00FD6497 /* Manager */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Manager; sourceTree = "<group>"; };
+		9FFF74D62CCF433F00FD6497 /* Extension */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Extension; sourceTree = "<group>"; };
+		9FFF74F62CD1E90E00FD6497 /* font */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = font; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -35,6 +38,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9FFF755E2CDD985E00FD6497 /* Kingfisher in Frameworks */,
 				9FFF74C82CCF1EED00FD6497 /* RxCocoa in Frameworks */,
 				9F3A03FB2C3F80ED00FF42DB /* SnapKit in Frameworks */,
 				9FFF74CC2CCF1EED00FD6497 /* RxSwift in Frameworks */,
@@ -65,9 +69,11 @@
 		9F3A03DE2C3ED8DD00FF42DB /* CurrentWeatherResult */ = {
 			isa = PBXGroup;
 			children = (
+				9FFF74F62CD1E90E00FD6497 /* font */,
 				9F3A03DF2C3ED8DD00FF42DB /* AppDelegate.swift */,
 				9FFF74B72CCE844500FD6497 /* Scene */,
 				9FFF74C12CCE855A00FD6497 /* Manager */,
+				9FFF74D62CCF433F00FD6497 /* Extension */,
 				9F3A03ED2C3ED8DD00FF42DB /* Info.plist */,
 				9F3A03E82C3ED8DD00FF42DB /* Assets.xcassets */,
 				9F3A03EA2C3ED8DD00FF42DB /* LaunchScreen.storyboard */,
@@ -93,6 +99,8 @@
 			fileSystemSynchronizedGroups = (
 				9FFF74B72CCE844500FD6497 /* Scene */,
 				9FFF74C12CCE855A00FD6497 /* Manager */,
+				9FFF74D62CCF433F00FD6497 /* Extension */,
+				9FFF74F62CD1E90E00FD6497 /* font */,
 			);
 			name = CurrentWeatherResult;
 			packageProductDependencies = (
@@ -101,6 +109,7 @@
 				9FFF74C72CCF1EED00FD6497 /* RxCocoa */,
 				9FFF74C92CCF1EED00FD6497 /* RxRelay */,
 				9FFF74CB2CCF1EED00FD6497 /* RxSwift */,
+				9FFF755D2CDD985E00FD6497 /* Kingfisher */,
 			);
 			productName = CurrentWeatherResult;
 			productReference = 9F3A03DC2C3ED8DD00FF42DB /* CurrentWeatherResult.app */;
@@ -133,6 +142,7 @@
 			packageReferences = (
 				9F3A03F92C3F80ED00FF42DB /* XCRemoteSwiftPackageReference "SnapKit" */,
 				9FFF74C42CCF1EED00FD6497 /* XCRemoteSwiftPackageReference "RxSwift" */,
+				9FFF755C2CDD985E00FD6497 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
 			productRefGroup = 9F3A03DD2C3ED8DD00FF42DB /* Products */;
 			projectDirPath = "";
@@ -401,6 +411,14 @@
 				minimumVersion = 6.8.0;
 			};
 		};
+		9FFF755C2CDD985E00FD6497 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.1.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -428,6 +446,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 9FFF74C42CCF1EED00FD6497 /* XCRemoteSwiftPackageReference "RxSwift" */;
 			productName = RxSwift;
+		};
+		9FFF755D2CDD985E00FD6497 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9FFF755C2CDD985E00FD6497 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

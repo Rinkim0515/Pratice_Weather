@@ -21,6 +21,7 @@ import UIKit
 import SnapKit
 import CoreLocation
 import RxSwift
+import Kingfisher
 
 class MainVC: UIViewController {
     
@@ -30,7 +31,7 @@ class MainVC: UIViewController {
         URLQueryItem(name: "appid", value: "4b4ab08dfbebc4502aa246da27e874e4"),
         URLQueryItem(name: "units", value: "metric")
     ]
-    
+    private let viewModel = MainVM()
     private let mainView = MainView()
     
     private var dataSource = [ForecastWeather]()
@@ -45,49 +46,55 @@ class MainVC: UIViewController {
         mainView.tableView.dataSource = self
         mainView.tableView.delegate = self
         setupUI()
-        
-        fetchCurrentWeatherData()
-        fetchForecastData()
+        bind()
+//        fetchCurrentWeatherData()
+//        fetchForecastData()
     }
     
     private func setupUI() {
         self.view = mainView
     }
     
-    private func fetchCurrentWeatherData(){
-        var urlComponents = URLComponents(string: "\(K.API.baseURL)weather")
-        urlComponents?.queryItems = self.urlQueryItem
-        
-        guard let url = urlComponents?.url else {
-            print("잘못된 URL")
-            return
-        }
-        
-        NetworkManager.shared.fetchData(url: url){ [weak self] (result: CurrentWeatherResult?) in
-            guard let self, let result else { return }
-            //ui 작업은 main Thread에서
-            DispatchQueue.main.async{ // 동기 비동기 때 배운다함
-                self.mainView.tempLabel.text = "\(Int(result.main.temp))°C"
-                self.mainView.tempMaxLabel.text = "최고: \(Int(result.main.tempMax))°C"
-                self.mainView.tempMinLabel.text = "최저: \(Int(result.main.tempMin))°C"
-            }
+    func bind() {
+        let load = rx.viewWillAppear
+            .do(onNext: { [weak self] _ in
+                self?.navigationController?.isNavigationBarHidden = true
+            })
+        let input = MainVM.Input(loadCurrentWeather: load)
+        let output = viewModel.transform(input: input)
             
-            guard let imageUrl = URL(string: "https://openweathermap.org/img/wn/\(result.weather[0].icon)@2x.png") else{
-                return
-            }
-            
-            if let data = try? Data(contentsOf: imageUrl) {
-                if let image = UIImage(data: data){
-                    DispatchQueue.main.async{
-                        self.mainView.imageView.image = image
-                    }
+        output.currentWeather
+            .bind { data in
+                guard let safedata = data else { return }
+                
+                DispatchQueue.main.async {
+                    self.mainView.tempLabel.text = "\(Int(safedata.main.temp))°C"
+                    self.mainView.tempMaxLabel.text = "최고: \(Int(safedata.main.tempMax))°C"
+                    self.mainView.tempMinLabel.text = "최저: \(Int(safedata.main.tempMin))°C"
+                    self.mainView.titleLabel.text = safedata.name
+                    guard let imageUrl = URL(string: "https://openweathermap.org/img/wn/\(safedata.weather[0].icon)@2x.png") else{ return }
+                    self.mainView.imageView.kf.setImage(with: imageUrl)
                     
                 }
-            }
+                
+                
+            }.disposed(by: disposedBag)
+        
+        output.forecastWeatherResult
+            .bind { data in
+                guard let safeData = data else { return }
+                
+                DispatchQueue.main.async {
+                    self.dataSource = safeData.list
+                    self.mainView.tableView.reloadData()
+                }
+                
+            }.disposed(by: disposedBag)
             
-        }
+        
         
     }
+    
     
     private func fetchForecastData(){
         var urlComponents = URLComponents(string: "https://api.openweathermap.org/data/2.5/forecast?")
