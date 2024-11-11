@@ -35,6 +35,7 @@ class MainVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         mainView.tableView.dataSource = self
         mainView.tableView.delegate = self
         setupUI()
@@ -75,6 +76,7 @@ class MainVC: UIViewController {
                     guard let imageUrl = URL(string: "https://openweathermap.org/img/wn/\(safedata.weather[0].icon)@2x.png") else{ return }
                     self.mainView.imageView.kf.setImage(with: imageUrl)
                 }
+                //rx를 통해서 datasource라는 변수없이 tableView를 관리하기 -> 추후에 collectionView로
                 
             }.disposed(by: disposedBag)
         

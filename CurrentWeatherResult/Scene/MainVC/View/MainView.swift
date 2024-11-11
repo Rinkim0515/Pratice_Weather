@@ -9,6 +9,8 @@ import UIKit
 import SnapKit
 
 class MainView: UIView {
+
+    
     let locationButton = {
         let button = UIButton()
         let image = UIImage(systemName: "location.app.fill")
@@ -123,7 +125,7 @@ class MainView: UIView {
         tableView.snp.makeConstraints{
             $0.top.equalTo(imageView.snp.bottom).offset(30)
             $0.leading.trailing.equalToSuperview().inset(20)
-            $0.bottom.equalToSuperview().inset(50)
+            $0.bottom.equalTo(safeAreaLayoutGuide.snp.bottom).inset(30)
         }
         
     }
