@@ -24,9 +24,9 @@ class MainVM {
     init() {}
     
     func transform(input: Input) -> Output {
-        // 날씨 데이터를 로드하는 Observable
+        //두가지의 스트림을 merge하고
         let loadTrigger = Observable.merge(input.loadCurrentWeather, input.updateLocation)
-        
+        // query는 최신값을 받아올수 있도록
         let query = Observable.combineLatest(latitudeRelay, longtitudeRelay)
             .map { lat, lon in
             return [
@@ -39,6 +39,7 @@ class MainVM {
         loadTrigger
             .withLatestFrom(query)
             .flatMapLatest { [unowned self] queryItems in
+                //unowned가 쓰인이유는 self가 100프로 있다고 확신, nil 체킹을 반복하지 않도록
                 self.repository.fetchCurrentWeatherData(urlQueryItem: queryItems).asObservable()
             }
             .bind(to: currentWeatherRelay)
@@ -53,29 +54,6 @@ class MainVM {
             .disposed(by: disposeBag)
             
         
-        
-//        input.loadCurrentWeather
-//            .withUnretained(self)
-//            .flatMapLatest { owner, _ in
-//                owner.repository.fetchCurrentWeatherData(urlQueryItem: query)
-//                    .asObservable()
-//            }
-//            .subscribe(onNext: { [weak self] data in
-//                self?.currentWeatherRelay.accept(data)
-//            }, onError: {error in
-//                print(error.localizedDescription)
-//            })
-//            .disposed(by: disposeBag)
-//        input.loadCurrentWeather
-//            .withUnretained(self)
-//            .flatMapLatest { owner, _ in
-//                owner.repository.fetchForecastWeatherData(urlQueryItem: query)
-//                    .asObservable()
-//            }.subscribe(onNext: { [weak self] data in
-//                self?.forecastWeatherRelay.accept(data)
-//            }, onError: { error in
-//                print(error.localizedDescription)
-//            }).disposed(by: disposeBag)
         return Output(currentWeather: currentWeatherRelay, forecastWeatherResult: forecastWeatherRelay)
     }
     
