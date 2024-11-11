@@ -11,8 +11,7 @@ import SnapKit
 class MainView: UIView {
     let locationButton = {
         let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        let image = UIImage(systemName: "location.app.fill")?.resizeImageTo(size: CGSize(width: 40, height: 40))
+        let image = UIImage(systemName: "location.app.fill")
         button.setImage(image, for: .normal)
         button.tintColor = .white
         return button
@@ -100,7 +99,7 @@ class MainView: UIView {
         ].forEach{ tempStackView.addArrangedSubview($0) }
         
         locationButton.snp.makeConstraints {
-            $0.trailing.equalTo(titleLabel.snp.leading).offset(-20)
+            $0.leading.equalTo(titleLabel.snp.trailing).offset(20)
             $0.centerY.equalTo(titleLabel.snp.centerY)
         }
         

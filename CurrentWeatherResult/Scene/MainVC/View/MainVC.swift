@@ -25,20 +25,12 @@ import Kingfisher
 
 class MainVC: UIViewController {
     
-    private let urlQueryItem: [URLQueryItem] = [
-        URLQueryItem(name: "lat", value: "37.5"),
-        URLQueryItem(name: "lon", value: "126.9"),
-        URLQueryItem(name: "appid", value: "4b4ab08dfbebc4502aa246da27e874e4"),
-        URLQueryItem(name: "units", value: "metric")
-    ]
     private let viewModel = MainVM()
     private let mainView = MainView()
-    
+    private let locationManager = CLLocationManager()
     private var dataSource = [ForecastWeather]()
-    
     private let disposedBag = DisposeBag()
-    
-    
+    private let updateLocationTriger = PublishSubject<Void>()
     
     
     override func viewDidLoad() {
@@ -47,26 +39,34 @@ class MainVC: UIViewController {
         mainView.tableView.delegate = self
         setupUI()
         bind()
-//        fetchCurrentWeatherData()
-//        fetchForecastData()
     }
     
     private func setupUI() {
         self.view = mainView
+        locationManager.delegate = self
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.requestLocation()
+        mainView.locationButton.addTarget(self, action: #selector(locationButtonTapped), for: .touchUpInside)
+        
+    }
+    @objc
+    private func locationButtonTapped() {
+        locationManager.requestLocation()
+        updateLocationTriger.onNext(())
+        
     }
     
-    func bind() {
+    private func bind() {
         let load = rx.viewWillAppear
             .do(onNext: { [weak self] _ in
                 self?.navigationController?.isNavigationBarHidden = true
             })
-        let input = MainVM.Input(loadCurrentWeather: load)
+        let input = MainVM.Input(loadCurrentWeather: load, updateLocation: updateLocationTriger.asObservable())
         let output = viewModel.transform(input: input)
             
         output.currentWeather
             .bind { data in
                 guard let safedata = data else { return }
-                
                 DispatchQueue.main.async {
                     self.mainView.tempLabel.text = "\(Int(safedata.main.temp))°C"
                     self.mainView.tempMaxLabel.text = "최고: \(Int(safedata.main.tempMax))°C"
@@ -74,9 +74,7 @@ class MainVC: UIViewController {
                     self.mainView.titleLabel.text = safedata.name
                     guard let imageUrl = URL(string: "https://openweathermap.org/img/wn/\(safedata.weather[0].icon)@2x.png") else{ return }
                     self.mainView.imageView.kf.setImage(with: imageUrl)
-                    
                 }
-                
                 
             }.disposed(by: disposedBag)
         
@@ -90,48 +88,32 @@ class MainVC: UIViewController {
                 }
                 
             }.disposed(by: disposedBag)
-            
-        
-        
+    }
+}
+
+//MARK: - location
+extension MainVC: CLLocationManagerDelegate{
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let location = locations.last {
+            let lat = location.coordinate.latitude
+            let lon = location.coordinate.longitude
+            viewModel.updateLocation(latitude: lat, longtitude: lon)
+            locationManager.stopUpdatingLocation()
+        }
     }
     
-    
-    private func fetchForecastData(){
-        var urlComponents = URLComponents(string: "https://api.openweathermap.org/data/2.5/forecast?")
-        urlComponents?.queryItems = self.urlQueryItem
-        
-        
-        guard let url = urlComponents?.url else{
-            print("잘못된 URL")
-            return
-        }
-        NetworkManager.shared.fetchData(url: url){ [weak self] (result: ForecastWeatherResult?) in
-            guard let self, let result else { return }
-            
-            for forecastWeather in result.list{
-                print("\(forecastWeather.main)  \(forecastWeather.dtTxt) \n\n")
-            }
-            
-            DispatchQueue.main.async{
-                self.dataSource = result.list
-                self.mainView.tableView.reloadData()
-            }
-        }
-        
-        
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: any Error) {
+        print(error)
     }
-    
-    
-    
     
 }
+
 
 extension MainVC: UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         40
     }
-    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         dataSource.count
