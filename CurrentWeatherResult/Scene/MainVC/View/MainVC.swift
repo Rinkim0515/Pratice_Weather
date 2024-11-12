@@ -66,8 +66,10 @@ class MainVC: UIViewController {
         let output = viewModel.transform(input: input)
             
         output.currentWeather
+            
             .bind { data in
                 guard let safedata = data else { return }
+                
                 DispatchQueue.main.async {
                     self.mainView.tempLabel.text = "\(Int(safedata.main.temp))°C"
                     self.mainView.tempMaxLabel.text = "최고: \(Int(safedata.main.tempMax))°C"
