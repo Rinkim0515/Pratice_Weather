@@ -24,8 +24,7 @@ class FavoriteView: UIView {
         return textField
     }()
     // 검색실패시 -> 도시가 없음을 alert로 보여줌, 검색기록에 띄우지 않음
-    let favoriteColletctionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
-    
+    //여기 그 과제중에 있음 section나눠서 하는거 그거 기반으로 만들고
     let recentCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
