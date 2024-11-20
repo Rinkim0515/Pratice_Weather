@@ -31,6 +31,7 @@
 		9FFF74C12CCE855A00FD6497 /* Manager */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Manager; sourceTree = "<group>"; };
 		9FFF74D62CCF433F00FD6497 /* Extension */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Extension; sourceTree = "<group>"; };
 		9FFF74F62CD1E90E00FD6497 /* font */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = font; sourceTree = "<group>"; };
+		9FFF767C2CEEA2FC00FD6497 /* Model */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Model; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +75,7 @@
 				9FFF74B72CCE844500FD6497 /* Scene */,
 				9FFF74C12CCE855A00FD6497 /* Manager */,
 				9FFF74D62CCF433F00FD6497 /* Extension */,
+				9FFF767C2CEEA2FC00FD6497 /* Model */,
 				9F3A03ED2C3ED8DD00FF42DB /* Info.plist */,
 				9F3A03E82C3ED8DD00FF42DB /* Assets.xcassets */,
 				9F3A03EA2C3ED8DD00FF42DB /* LaunchScreen.storyboard */,
@@ -101,6 +103,7 @@
 				9FFF74C12CCE855A00FD6497 /* Manager */,
 				9FFF74D62CCF433F00FD6497 /* Extension */,
 				9FFF74F62CD1E90E00FD6497 /* font */,
+				9FFF767C2CEEA2FC00FD6497 /* Model */,
 			);
 			name = CurrentWeatherResult;
 			packageProductDependencies = (
