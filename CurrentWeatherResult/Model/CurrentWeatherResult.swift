@@ -12,7 +12,7 @@ struct CurrentWeatherResult: Codable{
     let weather: [Weather]
     let main: WeatherMain
     let name: String
-    let wind: Wind
+    let wind: Wind?
     let dt: Int
 
 }
@@ -45,7 +45,7 @@ struct WeatherMain: Codable {
 struct Wind: Codable {
     let speed: Double // speed everage
     let deg: Double // speed way
-    let gust: Double // fastest speed
+    let gust: Double? // fastest speed
 }
 
 /*

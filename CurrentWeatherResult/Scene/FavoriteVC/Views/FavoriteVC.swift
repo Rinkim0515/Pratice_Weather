@@ -18,6 +18,10 @@ class FavoriteVC: UIViewController {
     private func setupUI() {
         self.view = favoriteView
         favoriteView.searchTextField.delegate = self
+        favoriteView.recentCollectionView.delegate = self
+        favoriteView.recentCollectionView.dataSource = self
+        favoriteView.favoriteCollectionView.delegate = self
+        favoriteView.favoriteCollectionView.dataSource = self
     }
     
 }
@@ -28,20 +32,24 @@ extension FavoriteVC: UITextFieldDelegate {
 }
 
 //MARK: - CollectionView
-extension FavoriteVC: UICollectionViewDelegate, UICollectionViewDataSource {
+extension FavoriteVC: UICollectionViewDelegate {
+    
+
+        
+    
+    
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        1
+        10
     }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+}
 
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SelectedCell.id, for: indexPath) as! SelectedCell
+extension FavoriteVC: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SelectedCell.id, for: indexPath) as! SelectedCell
         return cell
     }
-    
-    
 }
 
 //섹션 1 -> 즐겨찾는 날씨
