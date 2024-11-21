@@ -23,13 +23,57 @@ class FavoriteView: UIView {
         textField.borderStyle = .roundedRect
         return textField
     }()
+    let recentViewTitle = {
+        let label = UILabel()
+        label.text = "최근검색한 도시"
+        label.font = .systemFont(ofSize: 30, weight: .semibold)
+        label.textColor = .white
+        return label
+        
+    }()
+    
+    let favoriteCityTitle = {
+        let label = UILabel()
+        label.text = "즐겨찾기한 도시"
+        label.font = .systemFont(ofSize: 30, weight: .semibold)
+        label.textColor = .white
+        return label
+    }()
     // 검색실패시 -> 도시가 없음을 alert로 보여줌, 검색기록에 띄우지 않음
     //여기 그 과제중에 있음 section나눠서 하는거 그거 기반으로 만들고
-    let recentCollectionView: UICollectionView = {
+    lazy var recentCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        return collectionView
+                layout.sectionInset = UIEdgeInsets(
+                    top: 10, left: 10, bottom: 10, right: 10)
+                layout.minimumLineSpacing = 10
+                layout.minimumInteritemSpacing = 10
+        
+                let width = (UIScreen.main.bounds.width - 40)
+        let height = width / 5
+        
+                layout.itemSize = CGSize(width: width, height: height)
+                let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        
+        collectionView.backgroundColor = .white
+        collectionView.register(SelectedCell.self, forCellWithReuseIdentifier: SelectedCell.id)
+                return collectionView
+    }()
+    lazy var favoriteCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+                layout.sectionInset = UIEdgeInsets(
+                    top: 10, left: 10, bottom: 10, right: 10)
+                layout.minimumLineSpacing = 10
+                layout.minimumInteritemSpacing = 10
+        
+                let width = (UIScreen.main.bounds.width - 40)
+        let height = width / 5
+        
+                layout.itemSize = CGSize(width: width, height: height)
+                let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        
+        collectionView.backgroundColor = .white
+        collectionView.register(SelectedCell.self, forCellWithReuseIdentifier: SelectedCell.id)
+                return collectionView
     }()
     
     override init(frame: CGRect) {
@@ -43,7 +87,13 @@ class FavoriteView: UIView {
     }
     private func setupLayout() {
         [
-            searchTextField
+            searchTextField,
+            recentViewTitle,
+            recentCollectionView,
+            favoriteCityTitle,
+            favoriteCollectionView
+            
+            
         ].forEach{ addSubview($0) }
         
         searchTextField.snp.makeConstraints{
@@ -52,6 +102,26 @@ class FavoriteView: UIView {
             $0.horizontalEdges.equalTo(safeAreaLayoutGuide.snp.horizontalEdges).inset(20)
             $0.height.equalTo(30)
             
+        }
+        recentViewTitle.snp.makeConstraints{
+            $0.top.equalTo(searchTextField.snp.bottom).offset(20)
+            $0.leading.equalTo(safeAreaLayoutGuide.snp.leading).offset(10)
+        }
+        
+        recentCollectionView.snp.makeConstraints {
+            $0.top.equalTo(recentViewTitle.snp.bottom).offset(20)
+            $0.horizontalEdges.equalTo(safeAreaLayoutGuide.snp.horizontalEdges).inset(10)
+            $0.height.equalTo(200)
+        }
+        
+        favoriteCityTitle.snp.makeConstraints{
+            $0.top.equalTo(recentCollectionView.snp.bottom).offset(20)
+            $0.leading.equalTo(safeAreaLayoutGuide.snp.leading).offset(10)
+        }
+        favoriteCollectionView.snp.makeConstraints{
+            $0.top.equalTo(favoriteCityTitle.snp.bottom).offset(20)
+            $0.horizontalEdges.equalTo(safeAreaLayoutGuide.snp.horizontalEdges).inset(10)
+            $0.bottom.equalTo(safeAreaLayoutGuide.snp.bottom)
         }
     }
     // 화면에서 collectionView로 최근리스트 5개와 즐겨찾기 리스트 섹션 2개로 구성
